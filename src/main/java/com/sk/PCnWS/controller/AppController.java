@@ -100,4 +100,38 @@ public class AppController {
         // Send the user back to the dashboard
         return "redirect:/";
     }
+
+    // --- Edit Plant ---
+
+/**
+ * This shows the "Edit Plant" form, pre-filled with data.
+ * It maps to a URL like: http://localhost:8080/edit-plant/5
+ */
+@GetMapping("/edit-plant/{plantId}")
+public String showEditPlantForm(@PathVariable Long plantId, Model model) {
+
+    // 1. Find the plant's data
+    Plant plant = plantService.findPlantById(plantId);
+
+    // 2. Add that plant to the model so the HTML can use it
+    model.addAttribute("plant", plant);
+
+    // 3. Return the new HTML file we're about to create
+    return "edit-plant"; 
+}
+
+    //EDIT PLANT 
+    @PostMapping("/edit-plant")
+    public String processEditPlant(@RequestParam Long plantId,
+                                @RequestParam String plantName,
+                                @RequestParam String plantType,
+                                @RequestParam int wateringFrequency,
+                                @RequestParam int fertilizingFrequency) {
+
+        // Use the service to update the plant in the database
+        plantService.updatePlant(plantId, plantName, plantType, wateringFrequency, fertilizingFrequency);
+
+        // Send the user back to the dashboard
+        return "redirect:/";
+    }
 }

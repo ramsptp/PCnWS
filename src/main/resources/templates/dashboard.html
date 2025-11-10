@@ -38,6 +38,11 @@
             (<span th:text="${plant.plantType}">Plant Type</span>)
             - Water every <span th:text="${plant.wateringFrequencyDays}">X</span> days
             
+            <a th:href="@{/edit-plant/{id}(id=${plant.plantId})}"
+               style="color: blue; margin-left: 10px;">
+              [Edit]
+            </a>
+            
             <a th:href="@{/delete-plant/{id}(id=${plant.plantId})}"
                onclick="return confirm('Are you sure you want to delete this plant?');"
                style="color: red; margin-left: 10px;">

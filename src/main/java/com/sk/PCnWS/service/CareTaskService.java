@@ -5,6 +5,7 @@ import com.sk.PCnWS.model.Plant;
 import com.sk.PCnWS.repository.CareTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -81,5 +82,13 @@ public class CareTaskService {
      */
     public List<CareTask> getOverdueTasksForUser(Long userId) {
         return careTaskRepository.findPendingTasksForUser(userId, LocalDate.now());
+    }
+    @Transactional
+    public void resetSchedulesForPlant(Plant plant) {
+        // 1. Delete all future (pending) tasks for this plant
+        careTaskRepository.deletePendingTasksByPlantId(plant.getPlantId());
+
+        // 2. Create new fresh tasks based on the new frequencies
+        createInitialTasks(plant);
     }
 }

@@ -6,6 +6,7 @@ import com.sk.PCnWS.repository.PlantRepository;
 import com.sk.PCnWS.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -54,5 +55,34 @@ public class PlantService {
 
     public void deletePlant(Long plantId) {
         plantRepository.deleteById(plantId);
-}
+    }
+
+
+    public Plant findPlantById(Long plantId) {
+        return plantRepository.findById(plantId)
+                .orElseThrow(() -> new RuntimeException("Plant not found: " + plantId));
+    }
+
+    
+      //Updates an existing plant's details and resets its task schedule.
+     
+    @Transactional // Add this annotation
+    public void updatePlant(Long plantId, String plantName, String plantType, int wateringFreq, int fertilizingFreq) {
+        
+        // 1. Find the plant we need to update
+        Plant plant = findPlantById(plantId);
+
+        // 2. Update its details
+        plant.setPlantName(plantName);
+        plant.setPlantType(plantType);
+        plant.setWateringFrequencyDays(wateringFreq);
+        plant.setFertilizingFrequencyDays(fertilizingFreq);
+
+        // 3. Save the updated plant
+        plantRepository.save(plant);
+
+        // 4. ADD THIS NEW LINE:
+        // This will delete all old tasks and create new ones with the new frequencies.
+        careTaskService.resetSchedulesForPlant(plant);
+    }
 }

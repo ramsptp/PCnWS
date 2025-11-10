@@ -4,6 +4,8 @@ import com.sk.PCnWS.model.CareTask; // Import your CareTask model
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,4 +23,9 @@ public interface CareTaskRepository extends JpaRepository<CareTask, Long> {
 
     @Query("SELECT t FROM CareTask t WHERE t.plant.user.userId = ?1 ORDER BY t.dueDate ASC")
     List<CareTask> findAllByUserId(Long userId);
+    
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM CareTask t WHERE t.plant.plantId = ?1 AND t.isCompleted = false")
+    void deletePendingTasksByPlantId(Long plantId);
 }
