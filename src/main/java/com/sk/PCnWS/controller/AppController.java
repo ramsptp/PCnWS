@@ -59,10 +59,11 @@ public class AppController {
      * This shows the "Add New Plant" form.
      * It maps to: http://localhost:8080/add-plant
      */
+    // CORRECT
     @GetMapping("/add-plant")
-    public String showAddPlantForm() {
-        return "add-plant"; // Returns add-plant.html
-    }
+        public String showAddPlantForm() {
+            return "add_plant"; // This now looks for "add_plant.html"
+        }
 
     /**
      * This handles the form submission from the "Add New Plant" page.
