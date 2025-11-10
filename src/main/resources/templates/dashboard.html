@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to Your Plant Dashboard</h1>
+    
+    <div style="background-color: #ffcccc; border: 1px solid red; padding: 10px;">
+        <h2>Overdue Tasks!</h2>
+        <ul th:if="${!overdueTasks.isEmpty()}">
+            <li th:each="task : ${overdueTasks}">
+                <strong th:text="${task.plant.plantName}">Plant Name</strong>: 
+                <span th:text="${task.taskType}">Task Type</span>
+                - was due on <span th:text="${task.dueDate}">Due Date</span>
+                
+                <a th:href="@{/complete-task/{id}(id=${task.taskId})}">Complete Now</a>
+            </li>
+        </ul>
+        <p th:if="${overdueTasks.isEmpty()}">No overdue tasks. Great job!</p>
+    </div>
+
+    <hr>
+    
+    <h2>Your Plants</h2>
+    <a href="/add-plant">Add a New Plant</a>
+    <ul>
+        <li th:each="plant : ${plants}">
+            <strong th:text="${plant.plantName}">Plant Name</strong>
+            (<span th:text="${plant.plantType}">Plant Type</span>)
+            - Water every <span th:text="${plant.wateringFrequencyDays}">X</span> days
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>Upcoming Tasks</h2>
+    <ul>
+        <li th:each="task : ${tasks}" th:if="${!task.isCompleted}">
+            <strong th:text="${task.plant.plantName}">Plant Name</strong>: 
+            <span th:text="${task.taskType}">Task Type</span>
+            - due on <span th:text="${task.dueDate}">Due Date</span>
+            <a th:href="@{/complete-task/{id}(id=${task.taskId})}">Complete</a>
+        </li>
+    </ul>
+
+</body>
+</html>
