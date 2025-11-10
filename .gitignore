@@ -33,4 +33,8 @@ build/
 .vscode/
 
 # Ignore Spring Boot properties file (contains secrets)
+<<<<<<< HEAD
 src/main/resources/application.properties
+=======
+src/main/resources/application.properties
+>>>>>>> fa4f9cb156d70f62e5567b775aa91fe179ceb78b
