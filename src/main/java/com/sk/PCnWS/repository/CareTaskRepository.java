@@ -11,13 +11,14 @@ import java.util.List;
 public interface CareTaskRepository extends JpaRepository<CareTask, Long> {
 
     // "Find all tasks for a specific plant ID"
-    List<CareTask> findByPlantId(Long plantId);
+    // CORRECT
+    List<CareTask> findByPlant_PlantId(Long plantId);
 
     // This is a custom query to find all tasks for a user that are overdue
-    @Query("SELECT t FROM CareTask t WHERE t.plant.user.id = ?1 AND t.dueDate < ?2 AND t.isCompleted = false")
+    // CORRECT
+    @Query("SELECT t FROM CareTask t WHERE t.plant.user.userId = ?1 AND t.dueDate < ?2 AND t.isCompleted = false")
     List<CareTask> findPendingTasksForUser(Long userId, LocalDate today);
-    
-    // Finds all tasks for a specific user, ordered by due date
-    @Query("SELECT t FROM CareTask t WHERE t.plant.user.id = ?1 ORDER BY t.dueDate ASC")
+
+    @Query("SELECT t FROM CareTask t WHERE t.plant.user.userId = ?1 ORDER BY t.dueDate ASC")
     List<CareTask> findAllByUserId(Long userId);
 }

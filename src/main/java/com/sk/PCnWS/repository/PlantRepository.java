@@ -9,5 +9,6 @@ import java.util.List;
 public interface PlantRepository extends JpaRepository<Plant, Long> {
 
     // Automatically creates a query: "Find all Plants for a specific user ID"
-    List<Plant> findByUserId(Long userId);
+
+    List<Plant> findByUser_UserId(Long userId);
 }

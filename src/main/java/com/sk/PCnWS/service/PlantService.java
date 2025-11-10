@@ -20,9 +20,10 @@ public class PlantService {
     @Autowired
     private CareTaskService careTaskService; // To create initial tasks
 
+    // CORRECT
     public List<Plant> getPlantsForUser(Long userId) {
-        return plantRepository.findByUserId(userId);
-    }
+        return plantRepository.findByUser_UserId(userId); 
+}
 
     /**
      * This method adds a plant AND creates its first tasks.
