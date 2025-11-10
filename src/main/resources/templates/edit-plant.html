@@ -7,10 +7,10 @@
 <body>
     <h2>Edit Plant: <span th:text="${plant.plantName}">Plant Name</span></h2>
 
-    <form action="/edit-plant" method="POST">
-
+    <form th:action="@{/edit-plant}" method="POST" enctype="multipart/form-data">
+        
         <input type="hidden" name="plantId" th:value="${plant.plantId}" />
-
+        
         <div>
             <label for="plantName">Plant Name:</label>
             <input type="text" id="plantName" name="plantName" th:value="${plant.plantName}" required>
@@ -27,9 +27,26 @@
             <label for="fertilizingFrequency">Days Between Fertilizing:</label>
             <input type="number" id="fertilizingFrequency" name="fertilizingFrequency" th:value="${plant.fertilizingFrequencyDays}" required>
         </div>
-        <button type="submit">Save Changes</button>
-    </form>
 
+        <div>
+            <label for="imageFile">Upload New Picture:</label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/png, image/jpeg">
+            <p>Leave blank to keep the current picture.</p>
+        </div>
+
+        <div>
+            <h3>Current Picture:</h3>
+            <div th:if="${plant.imageUrl != null and plant.imageUrl != ''}">
+                <img th:src="${plant.imageUrl}" alt="Plant Image" style="width: 200px; height: auto;"/>
+            </div>
+            <div th:if="${plant.imageUrl == null or plant.imageUrl == ''}">
+                <p>No picture uploaded.</p>
+            </div>
+        </div>
+
+        <button type="submit" style="margin-top: 10px;">Save Changes</button>
+    </form>
+    
     <p><a href="/">Back to Dashboard</a></p>
 </body>
 </html>

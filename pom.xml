@@ -29,6 +29,10 @@
 	<properties>
 		<java.version>25</java.version>
 	</properties>
+
+
+
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,6 +66,8 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>

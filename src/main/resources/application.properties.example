@@ -9,3 +9,9 @@ spring.datasource.password=YOUR_DATABASE_PASSWORD_HERE
 # --- JPA / Hibernate Settings ---
 spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=true
+# --- Supabase Storage Settings ---
+# Get this from Settings -> API -> Project URL
+supabase.url=YOUR_SUPABASE_PROJECT_URL_HERE
+
+# Get this from Settings -> API -> Project API keys -> service_role
+supabase.service_key=YOUR_SUPABASE_SERVICE_KEY_HERE

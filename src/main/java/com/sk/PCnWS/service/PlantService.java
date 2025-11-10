@@ -7,6 +7,9 @@ import com.sk.PCnWS.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile; // <-- IMPORT THIS
+
+import java.io.IOException; // <-- IMPORT THIS
 import java.util.List;
 
 @Service
@@ -14,75 +17,77 @@ public class PlantService {
 
     @Autowired
     private PlantRepository plantRepository;
-
     @Autowired
-    private UserRepository userRepository; // To find the user
-
+    private UserRepository userRepository;
     @Autowired
-    private CareTaskService careTaskService; // To create initial tasks
+    private CareTaskService careTaskService;
+    @Autowired
+    private FileStorageService fileStorageService; // <-- INJECT OUR NEW SERVICE
 
-    // CORRECT
     public List<Plant> getPlantsForUser(Long userId) {
-        return plantRepository.findByUser_UserId(userId); 
-}
+        return plantRepository.findByUser_UserId(userId);
+    }
 
-    /**
-     * This method adds a plant AND creates its first tasks.
-     * This is the "Plant Management Module" and "Care Scheduler Module" working together.
-     */
-    public Plant addPlant(String plantName, String plantType, int wateringFreq, int fertilizingFreq, Long userId) {
+    @Transactional
+    public Plant addPlant(String plantName, String plantType, int wateringFreq, int fertilizingFreq, Long userId, MultipartFile imageFile) {
         
-        // 1. Find the user who owns this plant
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2. Create and save the new plant
         Plant newPlant = new Plant();
         newPlant.setPlantName(plantName);
         newPlant.setPlantType(plantType);
         newPlant.setWateringFrequencyDays(wateringFreq);
         newPlant.setFertilizingFrequencyDays(fertilizingFreq);
         newPlant.setUser(user);
-        // We'll handle imageURL later
+
+        // NEW FILE UPLOAD LOGIC
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                // This calls our new API-based uploader
+                String imageUrl = fileStorageService.uploadFile(imageFile);
+                newPlant.setImageUrl(imageUrl); // Save the URL to the plant
+            } catch (IOException | InterruptedException e) {
+                // Handle the error
+                System.err.println("Error uploading file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
         
         Plant savedPlant = plantRepository.save(newPlant);
-
-        // 3. Call the CareTaskService to create the initial tasks
         careTaskService.createInitialTasks(savedPlant);
-
         return savedPlant;
     }
-
-
-    public void deletePlant(Long plantId) {
-        plantRepository.deleteById(plantId);
-    }
-
 
     public Plant findPlantById(Long plantId) {
         return plantRepository.findById(plantId)
                 .orElseThrow(() -> new RuntimeException("Plant not found: " + plantId));
     }
 
-    
-      //Updates an existing plant's details and resets its task schedule.
-     
-    @Transactional // Add this annotation
-    public void updatePlant(Long plantId, String plantName, String plantType, int wateringFreq, int fertilizingFreq) {
+    @Transactional
+    public void updatePlant(Long plantId, String plantName, String plantType, int wateringFreq, int fertilizingFreq, MultipartFile imageFile) {
         
-        // 1. Find the plant we need to update
         Plant plant = findPlantById(plantId);
-
-        // 2. Update its details
         plant.setPlantName(plantName);
         plant.setPlantType(plantType);
         plant.setWateringFrequencyDays(wateringFreq);
         plant.setFertilizingFrequencyDays(fertilizingFreq);
 
-        // 3. Save the updated plant
+        // NEW FILE UPLOAD LOGIC (for update)
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String imageUrl = fileStorageService.uploadFile(imageFile);
+                plant.setImageUrl(imageUrl);
+            } catch (IOException | InterruptedException e) {
+                System.err.println("Error uploading file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        
         plantRepository.save(plant);
-
-        // 4. ADD THIS NEW LINE:
-        // This will delete all old tasks and create new ones with the new frequencies.
         careTaskService.resetSchedulesForPlant(plant);
+    }
+
+    public void deletePlant(Long plantId) {
+        plantRepository.deleteById(plantId);
     }
 }
