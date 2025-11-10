@@ -24,6 +24,10 @@ public interface CareTaskRepository extends JpaRepository<CareTask, Long> {
     @Query("SELECT t FROM CareTask t WHERE t.plant.user.userId = ?1 ORDER BY t.dueDate ASC")
     List<CareTask> findAllByUserId(Long userId);
     
+    // Finds all tasks due on a specific date, regardless of user
+    @Query("SELECT t FROM CareTask t WHERE t.dueDate = ?1 AND t.isCompleted = false")
+        List<CareTask> findAllDueOn(LocalDate date);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM CareTask t WHERE t.plant.plantId = ?1 AND t.isCompleted = false")

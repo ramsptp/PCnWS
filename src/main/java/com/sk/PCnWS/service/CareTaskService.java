@@ -91,4 +91,11 @@ public class CareTaskService {
         // 2. Create new fresh tasks based on the new frequencies
         createInitialTasks(plant);
     }
+
+    /**
+     * Finds all tasks due today across all users.
+     */
+    public List<CareTask> getTasksDueToday() {
+        return careTaskRepository.findAllDueOn(LocalDate.now());
+}
 }
