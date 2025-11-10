@@ -50,4 +50,9 @@ public class PlantService {
 
         return savedPlant;
     }
+
+
+    public void deletePlant(Long plantId) {
+        plantRepository.deleteById(plantId);
+}
 }

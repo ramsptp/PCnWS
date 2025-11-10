@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Your Dashboard</title>
 </head>
 <body>
+    <div style="float: right;">
+        Welcome, <strong sec:authentication="name">User</strong>!
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
     <h1>Welcome to Your Plant Dashboard</h1>
     
     <div style="background-color: #ffcccc; border: 1px solid red; padding: 10px;">
@@ -30,6 +37,12 @@
             <strong th:text="${plant.plantName}">Plant Name</strong>
             (<span th:text="${plant.plantType}">Plant Type</span>)
             - Water every <span th:text="${plant.wateringFrequencyDays}">X</span> days
+            
+            <a th:href="@{/delete-plant/{id}(id=${plant.plantId})}"
+               onclick="return confirm('Are you sure you want to delete this plant?');"
+               style="color: red; margin-left: 10px;">
+              [Delete]
+            </a>
         </li>
     </ul>
 

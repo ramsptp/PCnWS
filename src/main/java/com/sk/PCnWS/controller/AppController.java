@@ -87,4 +87,17 @@ public class AppController {
         careTaskService.completeTask(taskId);
         return "redirect:/";
     }
+
+     // --- Delete Plant ---
+
+
+    @GetMapping("/delete-plant/{plantId}")
+    public String deletePlant(@PathVariable Long plantId) {
+
+        // Use the service to delete the plant
+        plantService.deletePlant(plantId);
+
+        // Send the user back to the dashboard
+        return "redirect:/";
+    }
 }
