@@ -21,7 +21,55 @@
           }
         }
       }
+
     </script>
+
+   <style>
+        /* --- Minimal Scrollbar for Chrome, Safari, Edge --- */
+
+        /* Make the scrollbar thin */
+        .minimal-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /* 1. HIDE THE ARROWS */
+        .minimal-scrollbar::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* 2. HIDE THE TRACK (background) */
+        .minimal-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* 3. Style the "thumb" (the bar itself) for LIGHT MODE */
+        .minimal-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #d1d5db; /* A light gray */
+            border-radius: 4px;
+        }
+        .minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #9ca3af; /* A darker gray */
+        }
+
+        /* 4. Style the "thumb" for DARK MODE */
+        html.dark .minimal-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #4b5563; /* A dark gray */
+        }
+        html.dark .minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #6b7280; /* A lighter dark gray */
+        }
+
+        /* --- Minimal Scrollbar for Firefox --- */
+        .minimal-scrollbar {
+            scrollbar-width: thin;
+            /* thumb-color | track-color */
+            scrollbar-color: #d1d5db transparent;
+        }
+
+        html.dark .minimal-scrollbar {
+            scrollbar-color: #4b5563 transparent;
+        }
+    </style>
 
     <script>
       // This part runs first to prevent the "flash"
@@ -118,7 +166,7 @@
 
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Tasks Due Soon</h2>
-                    <ul class="divide-y divide-gray-border dark:divide-gray-700">
+                    <ul class="divide-y divide-gray-border dark:divide-gray-700 max-h-96 overflow-y-auto minimal-scrollbar">
                         <li th:each="task : ${upcomingTasks}" class="py-4 flex items-center justify-between gap-4">
                             <div class="flex items-center gap-4">
                                 <div th:if="${task.taskType == 'WATER'}" class="w-12 h-12 bg-blue-bg rounded-full flex items-center justify-center text-blue-dark text-2xl flex-shrink-0">💧</div>
