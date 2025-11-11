@@ -134,4 +134,44 @@ public class AppController {
         // 4. Return the new 'plants.html' template we're about to create
         return "plants";
     }
+
+    // --- Profile Page ---
+
+    /**
+     * This method shows the user's profile page.
+     * It maps to the URL: http://localhost:8080/profile
+     */
+    @GetMapping("/profile")
+    public String showProfilePage(Model model, Principal principal) {
+        // 1. Get the currently logged-in user
+        User user = getLoggedInUser(principal);
+        
+        // 2. Add the user object to the model so the HTML can access it
+        model.addAttribute("user", user);
+        
+        // 3. Return the new 'profile.html' template we'll create next
+        return "profile";
+    }
+
+    /**
+     * This method handles the form submission when the user updates their profile.
+     * It maps to a POST request to: http://localhost:8080/profile
+     */
+    @PostMapping("/profile")
+    public String handleProfileUpdate(Principal principal, @RequestParam String city) {
+        
+        // 1. Get the currently logged-in user
+        User user = getLoggedInUser(principal);
+        
+        // 2. Update the city field
+        user.setCity(city);
+        
+        // 3. Save the updated user back to the database
+        //    (We can use userRepository since it's already @Autowired in this class)
+        userRepository.save(user);
+        
+        // 4. Redirect back to the profile page with a "success" message
+        return "redirect:/profile?success=true";
+    }
+    
 }

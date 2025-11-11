@@ -19,6 +19,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true) // 'nullable = true' means it's optional
+    private String city;
+
+
     // --- Getters and Setters ---
     // (These are necessary for Spring to access the fields)
 
@@ -53,4 +57,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 }
