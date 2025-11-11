@@ -1,0 +1,425 @@
+/* --- Global Styles & Fonts --- */
+:root {
+    --green-dark: #1E6F5C;
+    --green-light: #3DD598;
+    --green-bg: #E8F5E9;
+    --red-dark: #c0392b;
+    --red-light: #FF6B6B;
+    --red-bg: #FFF0F0;
+    --blue-dark: #2980b9;
+    --blue-bg: #EBF5FB;
+    --gray-bg: #f5f7fa;
+    --gray-text: #555;
+    --gray-border: #e0e0e0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--gray-bg);
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Header / Navigation --- */
+.header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--gray-border);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--green-dark);
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--gray-text);
+}
+
+.btn-logout {
+    background-color: var(--red-light);
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.btn-logout:hover {
+    background-color: var(--red-dark);
+}
+
+/* --- Main Layout --- */
+.main-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    display: grid;
+    /* This creates the 2-column layout */
+    grid-template-columns: 1fr 380px; 
+    gap: 2rem;
+}
+
+.content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* --- General Card Styling --- */
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Task List Styling (Overdue & Due Soon) --- */
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray-border);
+}
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.task-info {
+    flex-grow: 1;
+}
+.task-info .plant-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.task-info .task-type {
+    color: var(--gray-text);
+    font-size: 0.9rem;
+}
+.task-info .due-date {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn-complete {
+    background-color: var(--green-light);
+    color: var(--green-dark);
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-complete:hover {
+    background-color: var(--green-dark);
+    color: white;
+}
+
+/* Overdue Card Specifics */
+.overdue-card {
+    background-color: var(--red-bg);
+    border: 1px solid var(--red-light);
+}
+.overdue-card .card-title {
+    color: var(--red-dark);
+}
+.overdue-card .task-icon {
+    background-color: var(--red-light);
+    color: white;
+}
+.overdue-card .btn-complete {
+    background-color: var(--red-light);
+    color: white;
+}
+.overdue-card .btn-complete:hover {
+    background-color: var(--red-dark);
+}
+
+/* Due Soon Card Specifics */
+.due-soon-card .task-icon-water {
+    background-color: var(--blue-bg);
+    color: var(--blue-dark);
+}
+.due-soon-card .task-icon-fertilize {
+    background-color: var(--green-bg);
+    color: var(--green-dark);
+}
+
+
+/* --- Plant Collection (Sidebar) --- */
+.plant-list-card .plant-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray-border);
+}
+.plant-list-card .plant-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.plant-list-card .plant-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.plant-list-card .plant-image-placeholder {
+    width: 60px;
+    height: 60px;
+    background-color: #eee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.plant-list-card .plant-info {
+    flex-grow: 1;
+}
+.plant-list-card .plant-name {
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.plant-list-card .plant-freq {
+    font-size: 0.9rem;
+    color: #555;
+}
+.plant-list-card .plant-actions {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.plant-list-card .plant-actions .edit-link {
+    color: var(--blue-dark);
+    text-decoration: none;
+}
+.plant-list-card .plant-actions .delete-link {
+    color: var(--red-dark);
+    text-decoration: none;
+    margin-left: 0.5rem;
+}
+
+.btn-add-plant {
+    background-color: var(--green-dark);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.btn-add-plant:hover {
+    background-color: #1a594a;
+}
+
+/* --- Quick Stats Card (Sidebar) --- */
+.stats-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.stats-card li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--gray-border);
+}
+.stats-card li:last-child {
+    border-bottom: none;
+}
+.stats-card .stats-label {
+    color: var(--gray-text);
+    font-weight: 500;
+}
+.stats-card .stats-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--green-dark);
+}
+.stats-card .stats-value.overdue {
+    color: var(--red-dark);
+}
+
+/* --- Form Page Styling --- */
+.form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+.form-card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+.form-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--gray-text);
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group input[type="url"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    box-sizing: border-box; /* Important! */
+}
+.form-group input:focus {
+    outline: none;
+    border-color: var(--green-dark);
+    box-shadow: 0 0 0 2px var(--green-bg);
+}
+.form-group small {
+    font-size: 0.9rem;
+    color: var(--gray-text);
+}
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.btn-primary {
+    background-color: var(--green-dark);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.btn-primary:hover {
+    background-color: #1a594a;
+}
+.btn-secondary {
+    background-color: #fff;
+    color: var(--gray-text);
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.btn-secondary:hover {
+    background-color: var(--gray-bg);
+}
+/* --- Authentication Page Styles (Login/Register) --- */
+
+/* This class will be added to the <body> tag */
+.auth-page {
+    /* A subtle gradient to match the vibe of your example */
+    background: linear-gradient(120deg, #f5f7fa 0%, var(--green-bg) 100%);
+}
+
+/* This is the new full-screen container that centers the card */
+.auth-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 85px); /* Full height minus the header */
+    padding: 2rem;
+}
+
+/* We make the form card narrower on these pages */
+.auth-layout .form-card {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+}
+
+/* This is the icon on top, like your example */
+.form-icon {
+    width: 70px;
+    height: 70px;
+    margin: -60px auto 1rem; /* Pulls the icon up to sit "on top" */
+    background-color: var(--green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* This styles the "Or Register" link at the bottom */
+.auth-switch-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.auth-switch-link a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-switch-link a:hover {
+    text-decoration: underline;
+}

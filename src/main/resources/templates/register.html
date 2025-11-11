@@ -1,28 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Plant Buddy</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
-<body>
-    <h2>Register for Plant Scheduler</h2>
-    
-    <form action="/register" method="POST">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+<body class="auth-page">
+
+    <header class="header">
+        <div class="header-logo">🌱 Plant Buddy</div>
+    </header>
+
+    <div class="auth-layout">
+        <div class="card form-card">
+            
+            <div class="form-icon">✏️</div>
+            
+            <h2 style="margin-top: 0;">Create Your Account</h2>
+            
+            <form th:action="@{/register}" method="POST" style="text-align: left;">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions" style="justify-content: center;">
+                    <button type="submit" class="btn-primary" style="width: 100%;">Register</button>
+                </div>
+            </form>
+
+            <div class="auth-switch-link">
+                Already have an account? <a th:href="@{/login}">Login here</a>
+            </div>
         </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Register</button>
-    </form>
-    
-    <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+
 </body>
 </html>

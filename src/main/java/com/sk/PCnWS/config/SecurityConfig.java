@@ -28,25 +28,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // <-- ADD THIS LINE
+            .csrf(csrf -> csrf.disable()) // We need this for the forms
             
             .authorizeHttpRequests(authorize -> authorize
-                // Allow anyone to visit the login, register, and static files
-                .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
-                // All other URLs (like "/" or "/add-plant") MUST be authenticated
-                .anyRequest().authenticated()
+                // Allow anyone to visit these specific pages
+                .requestMatchers("/login", "/register", "/styles.css").permitAll()
+                
+                // All other URLs MUST be authenticated
+                .anyRequest().authenticated() 
             )
             .formLogin(form -> form
-                // Use our custom login page
-                .loginPage("/login")
-                // This is the URL the login form will POST to
+                .loginPage("/login") 
                 .loginProcessingUrl("/login") 
-                // After a successful login, send the user to the dashboard
                 .defaultSuccessUrl("/", true) 
                 .permitAll()
             )
             .logout(logout -> logout
-                // Allow logging out
                 .permitAll()
             );
 

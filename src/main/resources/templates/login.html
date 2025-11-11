@@ -2,31 +2,50 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Plant Buddy</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
-<body>
-    <h2>Login</h2>
+<body class="auth-page">
 
-    <div th:if="${param.error}" style="color: red;">
-        Invalid username or password.
-    </div>
-    
-    <div th:if="${param.logout}" style="color: green;">
-        You have been logged out.
+    <header class="header">
+        <div class="header-logo">🌱 Plant Buddy</div>
+    </header>
+
+    <div class="auth-layout">
+        <div class="card form-card">
+            
+            <div class="form-icon">👤</div>
+            
+            <h2 style="margin-top: 0;">Login</h2>
+
+            <div th:if="${param.error}" style="background-color: var(--red-bg); color: var(--red-dark); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                Invalid username or password.
+            </div>
+            
+            <div th:if="${param.logout}" style="background-color: var(--green-bg); color: var(--green-dark); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                You have been logged out.
+            </div>
+
+            <form th:action="@{/login}" method="POST" style="text-align: left;">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions" style="justify-content: center;">
+                    <button type="submit" class="btn-primary" style="width: 100%;">Login</button>
+                </div>
+            </form>
+
+            <div class="auth-switch-link">
+                Don't have an account? <a th:href="@{/register}">Register here</a>
+            </div>
+        </div>
     </div>
 
-    <form th:action="@{/login}" method="POST">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <button type="submit">Login</button>
-    </form>
-    
-    <p>Don't have an account? <a href="/register">Register here</a></p>
 </body>
 </html>
