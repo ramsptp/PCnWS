@@ -122,11 +122,7 @@
                 <div class="flex items-center gap-4">
                     <span class="text-gray-text dark:text-gray-300 hidden sm:block">Welcome, <strong sec:authentication="name">User</strong>!</span>
                     
-                    <a th:href="@{/profile}" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" title="My Profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
+            
                     
                     <button onclick="toggleDarkMode()" class="p-2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <span id="darkModeIcon">🌙</span>
@@ -254,11 +250,27 @@
                     </ul>
                 </div>
                 
-                <div class="rounded-lg shadow overflow-hidden">
-                    <a class="weatherwidget-io" href="https://forecast7.com/en/8d8976d61/kollam/" data-label_1="KOLLAM" data-label_2="WEATHER" data-theme="original" >KOLLAM WEATHER</a>
-                    <script>
-                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-                    </script>
+                <div id="weather-card" class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Your Local Weather</h2>
+
+                    <div id="weather-content" class="flex items-center gap-4">
+
+                        <div id="weather-loading" class="w-full text-center text-gray-text dark:text-gray-400">
+                            <p>Asking for location permission...</p>
+                        </div>
+
+                        <div id="weather-error" class_a="hidden w-full text-center text-red-dark">
+                            <p>Could not get local weather. Please enable location permissions in your browser.</p>
+                        </div>
+
+                        <div id="weather-data" class_a="hidden flex items-center gap-4">
+                            <div id="weather-icon" class="text-5xl"></div>
+                            <div>
+                                <div id="weather-temp" class="text-3xl font-bold text-gray-900 dark:text-white"></div>
+                                <div id="weather-desc" class="text-gray-text dark:text-gray-400"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="bg-green-dark rounded-lg shadow p-5">
@@ -304,6 +316,112 @@
                     console.error('Error fetching reminders:', error);
                 });
         }, 3000); 
+
+                document.addEventListener('DOMContentLoaded', (event) => {
+            updateDarkModeIcon();
+        });
+
+                // --- NEW WEATHER LOGIC ---
+
+        // This function runs on page load
+        function fetchLocalWeather() {
+            if (!navigator.geolocation) {
+                showWeatherError("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            // 1. Ask the browser for the user's location
+            navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError);
+        }
+
+        // 2. If the user clicks "Allow"
+        function onLocationSuccess(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // 3. Call the Open-Meteo API (no key needed!)
+            const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const temp = data.current_weather.temperature;
+                    const code = data.current_weather.weathercode;
+                    showWeatherData(temp, code);
+                })
+                .catch(error => {
+                    showWeatherError("Could not fetch weather data.");
+                });
+        }
+
+        // 4. If the user clicks "Block" or an error occurs
+        function onLocationError(error) {
+            showWeatherError("Please enable location permissions to see local weather.");
+        }
+
+        // 5. This helper updates the HTML
+        function showWeatherData(temp, code) {
+            const { icon, description } = getWeatherDetails(code);
+
+            // Find the HTML elements
+            const loadingDiv = document.getElementById('weather-loading');
+            const errorDiv = document.getElementById('weather-error');
+            const dataDiv = document.getElementById('weather-data');
+
+            // Set the new values
+            document.getElementById('weather-icon').innerHTML = icon;
+            document.getElementById('weather-temp').innerHTML = `${Math.round(temp)}°C`;
+            document.getElementById('weather-desc').innerHTML = description;
+
+            // Show the data and hide the others
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            dataDiv.style.display = 'flex'; // Use 'flex' to match our styling
+        }
+
+        // 6. This shows an error message
+        function showWeatherError(message) {
+            const loadingDiv = document.getElementById('weather-loading');
+            const errorDiv = document.getElementById('weather-error');
+            const dataDiv = document.getElementById('weather-data');
+
+            document.getElementById('weather-error').innerHTML = `<p>${message}</p>`;
+
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'block';
+            dataDiv.style.display = 'none';
+        }
+
+        // 7. This translates the weather "code" from the API into an icon and description
+        function getWeatherDetails(code) {
+            switch (code) {
+                case 0: return { icon: "☀️", description: "Clear sky" };
+                case 1:
+                case 2:
+                case 3: return { icon: "☁️", description: "Mainly clear" };
+                case 45:
+                case 48: return { icon: "🌫️", description: "Fog" };
+                case 51:
+                case 53:
+                case 55: return { icon: "🌧️", description: "Drizzle" };
+                case 61:
+                case 63:
+                case 65: return { icon: "🌧️", description: "Rain" };
+                case 80:
+                case 81:
+                case 82: return { icon: "🌧️", description: "Rain showers" };
+                case 95: 
+                case 96:
+                case 99: return { icon: "⛈️", description: "Thunderstorm" };
+                default: return { icon: "🤷", description: "Unknown" };
+            }
+        }
+
+        // 8. Call our new function when the page loads
+        document.addEventListener('DOMContentLoaded', (event) => {
+            updateDarkModeIcon();
+            fetchLocalWeather(); // <-- ADD THIS LINE
+        });
     </script>
 </body>
 </html>

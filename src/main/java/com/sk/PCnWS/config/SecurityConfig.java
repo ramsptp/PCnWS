@@ -34,13 +34,12 @@ public class SecurityConfig {
             .headers(headers -> headers
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives(
-                        // Default: allow from our own server
                         "default-src 'self'; " + 
                         
-                        // Scripts: Allow 'self', inline scripts, Tailwind, and BOTH weather domains
+                        // Scripts: Allow 'self', inline, Tailwind, and BOTH weather domains
                         "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://weatherwidget.io https://forecast7.com; " +
                         
-                        // Styles: Allow 'self', inline styles, and the weather widget
+                        // Styles: Allow 'self', inline, and the weather widget
                         "style-src 'self' 'unsafe-inline' https://weatherwidget.io; " +
                         
                         // Images: Allow 'self', data:, and all external sites (*)
@@ -49,8 +48,11 @@ public class SecurityConfig {
                         // Frames: Allow the weather widget to embed
                         "frame-src 'self' https://weatherwidget.io https://forecast7.com; " +
 
-                        // Connect: Allow 'self' and BOTH weather domains
-                        "connect-src 'self' https://weatherwidget.io https://forecast7.com"
+                        // 
+                        // --- THIS IS THE UPDATED LINE ---
+                        // We are adding https://api.open-meteo.com
+                        //
+                        "connect-src 'self' https://weatherwidget.io https://forecast7.com https://api.open-meteo.com"
                     )
                 )
             )

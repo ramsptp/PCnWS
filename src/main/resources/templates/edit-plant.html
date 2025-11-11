@@ -73,12 +73,7 @@
                 
                 <div class="flex items-center gap-4">
                     <span class="text-gray-text dark:text-gray-300 hidden sm:block">Welcome, <strong sec:authentication="name">User</strong>!</span>
-                    
-                    <a th:href="@{/profile}" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" title="My Profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
+            
                     
                     <button onclick="toggleDarkMode()" class="p-2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <span id="darkModeIcon">🌙</span>

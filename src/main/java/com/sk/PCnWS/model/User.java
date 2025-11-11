@@ -1,13 +1,13 @@
-package com.sk.PCnWS.model; // Notice the package name
+package com.sk.PCnWS.model;
 
 import jakarta.persistence.*;
 
-@Entity // Tells Spring this class is a database entity
-@Table(name = "users") // Maps this class to the "users" table
+@Entity
+@Table(name = "users")
 public class User {
 
-    @Id // Marks this as the Primary Key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments the ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Column(nullable = false, unique = true)
@@ -19,12 +19,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true) // 'nullable = true' means it's optional
-    private String city;
-
-
     // --- Getters and Setters ---
-    // (These are necessary for Spring to access the fields)
 
     public Long getUserId() {
         return userId;
@@ -57,13 +52,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
 }
