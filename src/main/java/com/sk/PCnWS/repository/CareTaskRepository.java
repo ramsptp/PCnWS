@@ -32,4 +32,10 @@ public interface CareTaskRepository extends JpaRepository<CareTask, Long> {
     @Transactional
     @Query("DELETE FROM CareTask t WHERE t.plant.plantId = ?1 AND t.isCompleted = false")
     void deletePendingTasksByPlantId(Long plantId);
+
+    // ... (inside the interface, after your other methods)
+
+    // NEW METHOD: Finds tasks that are not complete AND are due today or in the future
+    @Query("SELECT t FROM CareTask t WHERE t.plant.user.userId = ?1 AND t.dueDate >= ?2 AND t.isCompleted = false ORDER BY t.dueDate ASC")
+    List<CareTask> findUpcomingTasksForUser(Long userId, LocalDate today);
 }

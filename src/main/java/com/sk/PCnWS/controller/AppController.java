@@ -35,15 +35,25 @@ public class AppController {
     }
 
     // --- Dashboard ---
+   // --- Dashboard ---
     @GetMapping("/")
     public String showDashboard(Model model, Principal principal) { 
         Long currentUserId = getLoggedInUser(principal).getUserId();
+
+        // 1. Get all plants for the user (for the Quick View)
         List<Plant> plants = plantService.getPlantsForUser(currentUserId);
-        List<CareTask> tasks = careTaskService.getTasksForUser(currentUserId);
+
+        // 2. Get ONLY tasks due in the past (for the alert box)
         List<CareTask> overdueTasks = careTaskService.getOverdueTasksForUser(currentUserId);
+
+        // 3. (THE FIX) Get ONLY tasks due today or in the future
+        List<CareTask> upcomingTasks = careTaskService.getUpcomingTasksForUser(currentUserId);
+
+        // 4. Add the correct lists to the model
         model.addAttribute("plants", plants);
-        model.addAttribute("tasks", tasks);
         model.addAttribute("overdueTasks", overdueTasks);
+        model.addAttribute("upcomingTasks", upcomingTasks); // We pass this new list
+
         return "dashboard";
     }
 

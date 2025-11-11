@@ -98,4 +98,13 @@ public class CareTaskService {
     public List<CareTask> getTasksDueToday() {
         return careTaskRepository.findAllDueOn(LocalDate.now());
 }
+
+// ... (inside the class, after your other methods)
+    
+    /**
+     * Finds all pending tasks due today or in the future for a specific user.
+     */
+    public List<CareTask> getUpcomingTasksForUser(Long userId) {
+        return careTaskRepository.findUpcomingTasksForUser(userId, LocalDate.now());
+    }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Collection - Plant Buddy</title>
+    <title>Plant Buddy</title>
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     
@@ -24,20 +24,41 @@
     </script>
 
     <script>
+      // This part runs first to prevent the "flash"
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      // This function now also updates the icon
       function toggleDarkMode() {
-        if (localStorage.theme === 'dark') {
+        if (document.documentElement.classList.contains('dark')) {
           localStorage.theme = 'light';
           document.documentElement.classList.remove('dark');
         } else {
           localStorage.theme = 'dark';
           document.documentElement.classList.add('dark');
         }
+        updateDarkModeIcon(); // Call the icon update
       }
+
+      // NEW function to update the icon based on the theme
+      function updateDarkModeIcon() {
+        const icon = document.getElementById('darkModeIcon');
+        if (icon) {
+          if (document.documentElement.classList.contains('dark')) {
+            icon.innerHTML = '☀️'; // Show sun in dark mode
+          } else {
+            icon.innerHTML = '🌙'; // Show moon in light mode
+          }
+        }
+      }
+      
+      // When the page content is loaded, run the icon update function
+      document.addEventListener('DOMContentLoaded', (event) => {
+        updateDarkModeIcon();
+      });
     </script>
 </head>
 
@@ -51,7 +72,9 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <span class="text-gray-text dark:text-gray-300">Welcome, <strong sec:authentication="name">User</strong>!</span>
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">🌙</button>
+                    <button onclick="toggleDarkMode()" class="p-2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                        <span id="darkModeIcon">🌙</span>
+                    </button>
                     <form th:action="@{/logout}" method="post" class="m-0">
                         <button type="submit" class="px-4 py-2 bg-red-light hover:bg-red-dark text-white font-semibold rounded-lg shadow-sm transition-colors">
                             Logout

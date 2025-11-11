@@ -3,27 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Plant Buddy</title>
+    <title>Plant Buddy</title>
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     
     <script>
       tailwind.config = {
-        darkMode: 'class', // This enables 'dark:' classes
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              'green-dark': '#1E6F5C',
-              'green-light': '#3DD598',
-              'green-bg': '#E8F5E9',
-              'red-dark': '#c0392b',
-              'red-light': '#FF6B6B',
-              'red-bg': '#FFF0F0',
-              'blue-dark': '#2980b9',
-              'blue-bg': '#EBF5FB',
-              'gray-bg': '#f5f7fa',
-              'gray-text': '#555',
-              'gray-border': '#e0e0e0',
+              'green-dark': '#1E6F5C', 'green-light': '#3DD598', 'green-bg': '#E8F5E9',
+              'red-dark': '#c0392b', 'red-light': '#FF6B6B', 'red-bg': '#FFF0F0',
+              'blue-dark': '#2980b9', 'blue-bg': '#EBF5FB', 'gray-bg': '#f5f7fa',
+              'gray-text': '#555', 'gray-border': '#e0e0e0',
             }
           }
         }
@@ -31,20 +24,41 @@
     </script>
 
     <script>
+      // This part runs first to prevent the "flash"
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      // This function now also updates the icon
       function toggleDarkMode() {
-        if (localStorage.theme === 'dark') {
+        if (document.documentElement.classList.contains('dark')) {
           localStorage.theme = 'light';
           document.documentElement.classList.remove('dark');
         } else {
           localStorage.theme = 'dark';
           document.documentElement.classList.add('dark');
         }
+        updateDarkModeIcon(); // Call the icon update
       }
+
+      // NEW function to update the icon based on the theme
+      function updateDarkModeIcon() {
+        const icon = document.getElementById('darkModeIcon');
+        if (icon) {
+          if (document.documentElement.classList.contains('dark')) {
+            icon.innerHTML = '☀️'; // Show sun in dark mode
+          } else {
+            icon.innerHTML = '🌙'; // Show moon in light mode
+          }
+        }
+      }
+      
+      // When the page content is loaded, run the icon update function
+      document.addEventListener('DOMContentLoaded', (event) => {
+        updateDarkModeIcon();
+      });
     </script>
 </head>
 
@@ -57,8 +71,8 @@
                     <span class="text-2xl font-bold text-green-dark dark:text-green-light">🌱 Plant Buddy</span>
                 </div>
                 <div class="flex items-center">
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                        🌙
+                    <button onclick="toggleDarkMode()" class="p-2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                        <span id="darkModeIcon">🌙</span>
                     </button>
                 </div>
             </div>
