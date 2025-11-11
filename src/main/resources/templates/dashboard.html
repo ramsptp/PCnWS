@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Buddy - Dashboard</title>
+    
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
@@ -26,8 +27,7 @@
                 <h2 class="card-title">🚨 Overdue Care!</h2>
                 <ul class="task-list">
                     <li th:each="task : ${overdueTasks}" class="task-item">
-                        <div class="task-icon">💧</div>
-                        <div class="task-info">
+                        <div class="task-icon">💧</div> <div class="task-info">
                             <span class="plant-name" th:text="${task.plant.plantName}">Plant Name</span>
                             <span class="task-type" th:text="${task.taskType} + ' - Due ' + ${task.dueDate}">Task - Due Date</span>
                         </div>
@@ -65,18 +65,18 @@
             <div class="card plant-collection-card">
                 <h2 class="card-title">
                     My Plant Collection
-                    <a th:href="@{/add-plant}" class="btn-add-plant">+ Add New Plant</a>
+                    <a th:href="@{/plants}" class="btn-add-plant">View All Plants &rarr;</a>
                 </h2>
                 
                 <div class="plant-collection-grid">
-                    <div th:each="plant : ${plants}" class="plant-card">
+                    <div th:each="plant, iter : ${plants}" th:if="${iter.index < 4}" class="plant-card">
                         
                         <div class="plant-card-img-container">
                             <img th:if="${plant.imageUrl != null and plant.imageUrl != ''}" th:src="${plant.imageUrl}" alt="Plant" class="plant-card-img"/>
                             <div th:if="${plant.imageUrl == null or plant.imageUrl == ''}" class="plant-card-img-placeholder">🌱</div>
                         </div>
-
-                        <div classs="plant-card-body">
+            
+                        <div class="plant-card-body">
                             <h3 th:text="${plant.plantName}">Fiddle Leaf Fig</h3>
                             <div class="plant-card-info">
                                 <span>💧 Water: Every <span th:text="${plant.wateringFrequencyDays}">X</span> days</span>
@@ -91,6 +91,10 @@
                             </a>
                         </div>
                     </div>
+                </div>
+                
+                <div th:if="${plants.isEmpty()}" style="padding-top: 1rem;">
+                    <p>You haven't added any plants yet! Go to "View All Plants" to add your first one.</p>
                 </div>
             </div>
 
@@ -109,7 +113,7 @@
                     <li>
                         <div class="stats-icon overdue">❗️</div>
                         <span class="stats-label">Overdue Tasks</span>
-                        <span class="stats-value overdue" th:text="${overdueTasks.size()}">0</span>
+                        <span class="stats-value" th:classappend="${overdueTasks.size() > 0 ? 'overdue' : ''}" th:text="${overdueTasks.size()}">0</span>
                     </li>
                     <li>
                         <div class="stats-icon due-soon">⏳</div>
@@ -119,6 +123,13 @@
                 </ul>
             </div>
             
+            <div class="card" style="padding: 0; overflow: hidden; border: none;">
+                <a class="weatherwidget-io" href="https://forecast7.com/en/8d8976d61/kollam/" data-label_1="KOLLAM" data-label_2="WEATHER" data-theme="original" >KOLLAM WEATHER</a>
+                <script>
+                !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+                </script>
+            </div>
+
             <div class="card tip-card">
                 <h2 class="card-title">💡 Today's Care Tip</h2>
                 <p>Most houseplants prefer indirect sunlight. If leaves start turning yellow, try moving your plant to a spot with less direct sun exposure.</p>

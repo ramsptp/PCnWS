@@ -106,4 +106,20 @@ public class AppController {
         careTaskService.completeTask(taskId);
         return "redirect:/";
     }
+    // --- Show All Plants Page ---
+
+    @GetMapping("/plants")
+    public String showAllPlants(Model model, Principal principal) {
+        // 1. Get the logged-in user
+        Long currentUserId = getLoggedInUser(principal).getUserId();
+
+        // 2. Get ALL plants for this user
+        List<Plant> plants = plantService.getPlantsForUser(currentUserId);
+
+        // 3. Add the list to the model
+        model.addAttribute("plants", plants);
+
+        // 4. Return the new 'plants.html' template we're about to create
+        return "plants";
+    }
 }
