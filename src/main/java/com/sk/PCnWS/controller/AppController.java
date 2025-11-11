@@ -5,6 +5,7 @@ import com.sk.PCnWS.model.CareTask;
 import com.sk.PCnWS.model.User;
 import com.sk.PCnWS.repository.UserRepository;
 import com.sk.PCnWS.service.PlantService;
+import com.sk.PCnWS.service.TipService;
 import com.sk.PCnWS.service.CareTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,8 @@ public class AppController {
     private CareTaskService careTaskService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TipService tipService;
 
     private User getLoggedInUser(Principal principal) {
         String username = principal.getName();
@@ -35,27 +38,26 @@ public class AppController {
     }
 
     // --- Dashboard ---
-   // --- Dashboard ---
-    @GetMapping("/")
-    public String showDashboard(Model model, Principal principal) { 
-        Long currentUserId = getLoggedInUser(principal).getUserId();
+        @GetMapping("/")
+        public String showDashboard(Model model, Principal principal) { 
+            Long currentUserId = getLoggedInUser(principal).getUserId();
 
-        // 1. Get all plants for the user (for the Quick View)
-        List<Plant> plants = plantService.getPlantsForUser(currentUserId);
+            // 1. Get all your existing data
+            List<Plant> plants = plantService.getPlantsForUser(currentUserId);
+            List<CareTask> overdueTasks = careTaskService.getOverdueTasksForUser(currentUserId);
+            List<CareTask> upcomingTasks = careTaskService.getUpcomingTasksForUser(currentUserId);
 
-        // 2. Get ONLY tasks due in the past (for the alert box)
-        List<CareTask> overdueTasks = careTaskService.getOverdueTasksForUser(currentUserId);
+            // 2. THIS IS THE NEW LINE: Get the daily tip
+            String dailyTip = tipService.getDailyTip();
 
-        // 3. (THE FIX) Get ONLY tasks due today or in the future
-        List<CareTask> upcomingTasks = careTaskService.getUpcomingTasksForUser(currentUserId);
+            // 3. Add all data to the model
+            model.addAttribute("plants", plants);
+            model.addAttribute("overdueTasks", overdueTasks);
+            model.addAttribute("upcomingTasks", upcomingTasks);
+            model.addAttribute("dailyTip", dailyTip); // <-- AND ADD THE NEW TIP
 
-        // 4. Add the correct lists to the model
-        model.addAttribute("plants", plants);
-        model.addAttribute("overdueTasks", overdueTasks);
-        model.addAttribute("upcomingTasks", upcomingTasks); // We pass this new list
-
-        return "dashboard";
-    }
+            return "dashboard";
+        }
 
     // --- Add Plant ---
     @GetMapping("/add-plant")

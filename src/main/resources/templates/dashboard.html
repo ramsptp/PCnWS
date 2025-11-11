@@ -257,7 +257,9 @@
                 
                 <div class="bg-green-dark rounded-lg shadow p-5">
                     <h2 class="text-xl font-bold text-white mb-3">💡 Today's Care Tip</h2>
-                    <p class="text-green-100/90 text-sm leading-relaxed">Most houseplants prefer indirect sunlight. If leaves start turning yellow, try moving your plant to a spot with less direct sun exposure.</p>
+                   <p class="text-green-100/90 text-sm leading-relaxed" th:text="${dailyTip}">
+                        [Dynamic care tip will load here]
+                    </p>
                 </div>
 
             </div>
