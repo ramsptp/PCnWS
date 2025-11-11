@@ -1,65 +1,133 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Plant - Plant Buddy</title>
-    <link rel="stylesheet" th:href="@{/styles.css}">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'green-dark': '#1E6F5C', 'green-light': '#3DD598', 'green-bg': '#E8F5E9',
+              'red-dark': '#c0392b', 'red-light': '#FF6B6B', 'red-bg': '#FFF0F0',
+              'blue-dark': '#2980b9', 'blue-bg': '#EBF5FB', 'gray-bg': '#f5f7fa',
+              'gray-text': '#555', 'gray-border': '#e0e0e0',
+            }
+          }
+        }
+      }
+    </script>
+
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      function toggleDarkMode() {
+        if (localStorage.theme === 'dark') {
+          localStorage.theme = 'light';
+          document.documentElement.classList.remove('dark');
+        } else {
+          localStorage.theme = 'dark';
+          document.documentElement.classList.add('dark');
+        }
+      }
+    </script>
 </head>
-<body>
 
-    <header class="header">
-        <div class="header-logo">🌱 Plant Buddy</div>
+<body class="bg-gray-bg dark:bg-gray-900 min-h-screen">
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-border dark:border-gray-700">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-bold text-green-dark dark:text-green-light">🌱 Plant Buddy</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-text dark:text-gray-300">Welcome, <strong sec:authentication="name">User</strong>!</span>
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">🌙</button>
+                    <form th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" class="px-4 py-2 bg-red-light hover:bg-red-dark text-white font-semibold rounded-lg shadow-sm transition-colors">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
     </header>
+    
+    <main class="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" th:text="'Editing: ' + ${plant.plantName}">Edit Plant</h2>
 
-    <div class="form-container">
-        <div class="card form-card">
-            <h2 th:text="'Editing: ' + ${plant.plantName}">Edit Plant</h2>
-            
-            <form th:action="@{/edit-plant}" method="POST" enctype="multipart/form-data">
+            <form th:action="@{/edit-plant}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                
                 <input type="hidden" name="plantId" th:value="${plant.plantId}" />
 
-                <div class="form-group">
-                    <label for="plantName">Plant Name:</label>
-                    <input type="text" id="plantName" name="plantName" th:value="${plant.plantName}" required>
+                <div>
+                    <label for="plantName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Plant Name</label>
+                    <input type="text" id="plantName" name="plantName" th:value="${plant.plantName}" required
+                           class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-dark focus:ring-green-dark">
                 </div>
-                <div class="form-group">
-                    <label for="plantType">Plant Type (e.g., "Fern"):</label>
-                    <input type="text" id="plantType" name="plantType" th:value="${plant.plantType}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="imageFile">Upload New Picture:</label>
-                    <input type="file" id="imageFile" name="imageFile" accept="image/png, image/jpeg">
-                    <small>Leave blank to keep the current picture.</small>
+
+                <div>
+                    <label for="plantType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Plant Type (e.g., "Fern")</label>
+                    <input type="text" id="plantType" name="plantType" th:value="${plant.plantType}"
+                           class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-dark focus:ring-green-dark">
                 </div>
 
                 <div class="form-group">
-                    <label for="wateringFrequency">Days Between Watering:</label>
-                    <input type="number" id="wateringFrequency" name="wateringFrequency" th:value="${plant.wateringFrequencyDays}" required min="1">
-                </div>
-                <div class="form-group">
-                    <label for="fertilizingFrequency">Days Between Fertilizing:</label>
-                    <input type="number" id="fertilizingFrequency" name="fertilizingFrequency" th:value="${plant.fertilizingFrequencyDays}" required min="1">
-                </div>
-
-                <div class="form-group">
-                    <label>Current Picture:</label>
-                    <div th:if="${plant.imageUrl != null and plant.imageUrl != ''}">
-                        <img th:src="${plant.imageUrl}" alt="Plant Image" style="width: 200px; height: auto; border-radius: 8px;"/>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Picture:</label>
+                    <div th:if="${plant.imageUrl != null and plant.imageUrl != ''}" class="mt-2">
+                        <img th:src="${plant.imageUrl}" alt="Plant Image" class="w-48 h-48 object-cover rounded-lg shadow-md"/>
                     </div>
-                    <div th:if="${plant.imageUrl == null or plant.imageUrl == ''}">
-                        <p>No picture provided.</p>
+                    <div th:if="${plant.imageUrl == null or plant.imageUrl == ''}" class="mt-2">
+                        <p class="text-gray-500 dark:text-gray-400">No picture provided.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="imageFile" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Upload New Picture</label>
+                    <input type="file" id="imageFile" name="imageFile" accept="image/png, image/jpeg"
+                           class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
+                                  file:mr-4 file:py-2 file:px-4
+                                  file:rounded-md file:border-0
+                                  file:text-sm file:font-semibold
+                                  file:bg-green-bg file:text-green-dark
+                                  hover:file:bg-green-dark/20">
+                    <small class="text-gray-500 dark:text-gray-400">Leave blank to keep the current picture.</small>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="wateringFrequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Days Between Watering</label>
+                        <input type="number" id="wateringFrequency" name="wateringFrequency" th:value="${plant.wateringFrequencyDays}" required min="1"
+                               class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-dark focus:ring-green-dark">
+                    </div>
+                     <div>
+                        <label for="fertilizingFrequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Days Between Fertilizing</label>
+                        <input type="number" id="fertilizingFrequency" name="fertilizingFrequency" th:value="${plant.fertilizingFrequencyDays}" required min="1"
+                               class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-dark focus:ring-green-dark">
                     </div>
                 </div>
                
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">Save Changes</button>
-                    <a th:href="@{/}" class="btn-secondary">Cancel</a>
+                <div class="flex justify-end gap-4 pt-4">
+                    <a th:href="@{/plants}" class="px-6 py-2 bg-gray-200 dark:bg-gray-600 dark:text-white hover:bg-gray-300 text-gray-800 font-medium rounded-lg shadow-sm">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-green-dark hover:bg-green-dark/80 text-white font-medium rounded-lg shadow-sm">
+                        Save Changes
+                    </button>
                 </div>
             </form>
         </div>
-    </div>
+    </main>
 
 </body>
 </html>

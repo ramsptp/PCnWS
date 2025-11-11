@@ -28,11 +28,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // We need this for the forms
+            .csrf(csrf -> csrf.disable()) // For our forms to work
             
+            // --- UPDATED SECURITY HEADERS ---
+            .headers(headers -> headers
+                .contentSecurityPolicy(csp -> csp
+                    .policyDirectives(
+                        // Default: allow from our own server
+                        "default-src 'self'; " + 
+                        
+                        // Scripts: Allow 'self', inline scripts, Tailwind, and BOTH weather domains
+                        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://weatherwidget.io https://forecast7.com; " +
+                        
+                        // Styles: Allow 'self', inline styles, and the weather widget
+                        "style-src 'self' 'unsafe-inline' https://weatherwidget.io; " +
+                        
+                        // Images: Allow 'self', data:, and all external sites (*)
+                        "img-src 'self' data: *; " + 
+                        
+                        // Frames: Allow the weather widget to embed
+                        "frame-src 'self' https://weatherwidget.io https://forecast7.com; " +
+
+                        // Connect: Allow 'self' and BOTH weather domains
+                        "connect-src 'self' https://weatherwidget.io https://forecast7.com"
+                    )
+                )
+            )
+            // --- END OF UPDATED BLOCK ---
+
             .authorizeHttpRequests(authorize -> authorize
-                // Allow anyone to visit these specific pages
-                .requestMatchers("/login", "/register", "/styles.css").permitAll()
+                // Allow anyone to visit login and register
+                .requestMatchers("/login", "/register").permitAll()
                 
                 // All other URLs MUST be authenticated
                 .anyRequest().authenticated() 
