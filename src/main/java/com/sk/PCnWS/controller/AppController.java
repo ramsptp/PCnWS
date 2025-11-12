@@ -113,4 +113,22 @@ public class AppController {
         careTaskService.completeTask(taskId);
         return "redirect:/"; // Redirect back to the dashboard
     }
+
+    // --- Profile Page ---
+
+/**
+ * This method SHOWS the user's profile page.
+ * It maps to the URL: http://localhost:8080/profile
+ */
+    @GetMapping("/profile")
+    public String showProfilePage(Model model, Principal principal) {
+        // 1. Get the currently logged-in user object
+        User user = getLoggedInUser(principal);
+
+        // 2. Add the user object to the model so the HTML can access it
+        model.addAttribute("user", user);
+
+        // 3. Return the new 'profile.html' template we'll create next
+        return "profile";
+    }
 }
