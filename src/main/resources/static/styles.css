@@ -558,3 +558,33 @@ body {
 .stats-icon.total { background-color: var(--green-bg); color: var(--green-dark); }
 .stats-icon.overdue { background-color: var(--red-bg); color: var(--red-dark); }
 .stats-icon.due-soon { background-color: var(--blue-bg); color: var(--blue-dark); }
+
+/* Paste into your existing <style> */
+.weather-card {
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 400ms ease, box-shadow 400ms ease, transform 200ms ease;
+}
+.weather-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.03));
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0.6;
+}
+.weather-glow {
+  position: absolute;
+  width: 220%;
+  height: 120%;
+  left: -60%;
+  top: -40%;
+  filter: blur(40px);
+  opacity: 0.45;
+  pointer-events: none;
+  transition: background 400ms ease, opacity 300ms ease;
+  mix-blend-mode: screen;
+}
