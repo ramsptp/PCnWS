@@ -1,6 +1,5 @@
 # 🌱 Plant Buddy: Plant Care & Watering Scheduler
 
-![Plant Buddy Dashboard](httpsd://i.imgur.com/83gA0b0.png) 
 This project is a full-stack, responsive web application designed to help users efficiently manage and care for their plants. [cite_start]It provides a beautiful, modern interface for tracking plant collections, uploading images, and receiving smart, flexible care reminders. [cite: 3]
 
 [cite_start]Built using Java (Spring Boot) for the backend and a cloud-hosted PostgreSQL (Supabase) database, the application is secure, scalable, and easy to use. [cite: 5]
