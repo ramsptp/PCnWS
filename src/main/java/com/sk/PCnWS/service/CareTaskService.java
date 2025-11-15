@@ -20,11 +20,15 @@ public class CareTaskService {
      * This is the core scheduler logic.
      * When a task is completed, it creates the next one.
      */
-    public void completeTask(Long taskId) {
+    /**
+     * This is the core scheduler logic.
+     * When a task is completed, it creates the next one.
+     * NOW IT RETURNS THE TASK THAT WAS COMPLETED.
+     */
+    public CareTask completeTask(Long taskId) { // <-- 1. CHANGED RETURN TYPE
         Optional<CareTask> optionalTask = careTaskRepository.findById(taskId);
         if (!optionalTask.isPresent()) {
-            // Handle error - task not found
-            return;
+            return null; // Handle error - task not found
         }
 
         CareTask completedTask = optionalTask.get();
@@ -37,7 +41,6 @@ public class CareTaskService {
         nextTask.setTaskType(completedTask.getTaskType());
         nextTask.setIsCompleted(false);
 
-        // Calculate the next due date based on the plant's frequency
         int frequency = 0;
         if ("WATER".equals(completedTask.getTaskType())) {
             frequency = completedTask.getPlant().getWateringFrequencyDays();
@@ -47,6 +50,8 @@ public class CareTaskService {
 
         nextTask.setDueDate(LocalDate.now().plusDays(frequency));
         careTaskRepository.save(nextTask);
+
+        return completedTask; // <-- 2. RETURN THE COMPLETED TASK
     }
 
     /**

@@ -288,6 +288,17 @@
                     </p>
                 </div>
 
+                <div th:if="${toastMessage}"
+                    id="toast-notification"
+                    th:text="${toastMessage}"
+                    class="fixed bottom-5 right-5 px-6 py-4 rounded-lg shadow-lg 
+                            bg-green-dark dark:bg-green-light 
+                            text-white dark:text-green-dark 
+                            font-semibold 
+                            translate-x-full transition-transform duration-500 ease-out"
+                    style="transform: translateX(120%);">
+                    </div>
+
 
     </main>
 
@@ -522,9 +533,32 @@
             // ensure there's only one fetchLocalWeather in your page
             try { fetchLocalWeather(); } catch (e) { console.error(e); }
             });
+
+            // --- NEW TOAST NOTIFICATION LOGIC ---
+
+            // This runs when the page is loaded
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // ... your other functions (updateDarkModeIcon, fetchNotifications, etc.) are already here ...
+
+                const toast = document.getElementById('toast-notification');
+
+                if (toast) {
+                    // 1. After 100ms, slide the toast in
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(0)';
+                    }, 100);
+
+                    // 2. After 3 seconds (3100ms total), slide the toast back out
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(120%)';
+                    }, 3100);
+                }
+            });
+
+
             </script>
 
-
+            
 
     </body>
 </html>

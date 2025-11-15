@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -109,10 +110,24 @@ public class AppController {
     }
 
     @GetMapping("/complete-task/{taskId}")
-    public String completeTask(@PathVariable Long taskId) {
-        careTaskService.completeTask(taskId);
-        return "redirect:/"; // Redirect back to the dashboard
+public String completeTask(@PathVariable Long taskId, RedirectAttributes redirectAttributes) {
+
+    // 1. Complete the task and get the object back
+    CareTask completedTask = careTaskService.completeTask(taskId);
+
+    // 2. Build the success message
+    if (completedTask != null) {
+        String plantName = completedTask.getPlant().getPlantName();
+        String taskType = completedTask.getTaskType().toLowerCase() + "ed"; // "WATER" -> "watered"
+
+        // 3. Add the message as a Flash Attribute (survives the redirect)
+        redirectAttributes.addFlashAttribute("toastMessage", 
+            plantName + " has been " + taskType + "!");
     }
+
+    // 4. Redirect back to the dashboard
+    return "redirect:/";
+}
 
     // --- Profile Page ---
 
