@@ -30,39 +30,34 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // For our forms to work
             
-            // --- UPDATED SECURITY HEADERS ---
             .headers(headers -> headers
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives(
                         "default-src 'self'; " + 
                         
-                        // Scripts: Allow 'self', inline, Tailwind, and BOTH weather domains
+                        // Scripts: Allow 'self', inline, Tailwind, and WeatherWidget
                         "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://weatherwidget.io https://forecast7.com; " +
                         
-                        // Styles: Allow 'self', inline, and the weather widget
+                        // Styles: Allow 'self', inline, and WeatherWidget
                         "style-src 'self' 'unsafe-inline' https://weatherwidget.io; " +
                         
                         // Images: Allow 'self', data:, and all external sites (*)
                         "img-src 'self' data: *; " + 
                         
-                        // Frames: Allow the weather widget to embed
+                        // Frames: Allow the WeatherWidget to embed
                         "frame-src 'self' https://weatherwidget.io https://forecast7.com; " +
 
                         // 
                         // --- THIS IS THE UPDATED LINE ---
-                        // We are adding https://api.open-meteo.com
+                        // We must allow *both* Open-Meteo APIs
                         //
-                        "connect-src 'self' https://weatherwidget.io https://forecast7.com https://api.open-meteo.com"
+                        "connect-src 'self' https://api.open-meteo.com https://geocoding-api.open-meteo.com"
                     )
                 )
             )
-            // --- END OF UPDATED BLOCK ---
 
             .authorizeHttpRequests(authorize -> authorize
-                // Allow anyone to visit login and register
                 .requestMatchers("/login", "/register").permitAll()
-                
-                // All other URLs MUST be authenticated
                 .anyRequest().authenticated() 
             )
             .formLogin(form -> form
